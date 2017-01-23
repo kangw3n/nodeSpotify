@@ -1,0 +1,36 @@
+extends layout
+
+block content
+	.container
+		if data
+			#album
+				header.album-header
+					.row
+						.col-md-4
+							if data.images.length > 0
+								div
+									img.album-thumb(src=data.images[0].url, alt='')
+						.col-md-8
+							if data.artists.length > 0
+								h4
+									each val in data.artists
+										span=val.name
+							h2=data.name
+							h5 Release Date: #{data.release_date}
+							a.btn.btn-primary(href=data.external_urls.spotify, target='_blank') View In Spotify
+				.album-tracks
+					h2 Album Tracks
+					each val in data.tracks.items
+						div
+							.well
+								h5
+									| #{val.track_number} -
+									a(href="/track/"+ val.id)  #{val.name}
+								div
+									| Artists:
+									each artist in val.artists
+										span.spacer
+											a(href="/artist/" + artist.id) #{artist.name}
+								a(href=val.preview_url, target='_blank') Preview Track
+		else
+			div | no items

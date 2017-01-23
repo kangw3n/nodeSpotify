@@ -1,0 +1,23 @@
+extends layout
+
+block content
+	.container
+		if data
+			#single
+				header.album-header
+					.row
+						.col-md-4
+							if data.album.images.length > 0
+								div
+									img.album-thumb(src=data.album.images[0].url, alt='')
+						.col-md-8
+							if data.artists.length > 0
+								h4
+									each val in data.artists
+										span.spacer
+											a(href="/artist/" + val.id)=val.name
+							h2=data.name
+							h5
+								| Album Name:
+								a(href="/album/" + data.album.id)=data.album.name
+							a.btn.btn-primary(href=data.external_urls.spotify, target='_blank') View In Spotify

@@ -1,0 +1,64 @@
+extends layout
+
+block content
+	.container#vueApp
+		if data
+			div
+				header.artist-header.clearfix
+					h1
+						if data.images.length > 0
+							span
+								img.artist-thumb.img-circle(src=data.images[0].url, alt='')
+						span=data.name
+					if data.genres.length > 0
+						p
+							| Genres:
+							each genres in data.genres
+								span.spacer #{genres}
+					.col-md-3
+						a.btn.btn-success(href="/top-tracks/" + data.id) View all Tracks
+				form#albumFilter
+					.form-group
+						label.control-label(for='inputDefault') Filter Album
+						input#inputDefault.form-control(type='text', v-model='term', name='albumFilter')
+				.artist-albums
+					.row.flexy
+						.col-md-3.well(v-for='album of filteredTerm')
+							.album(v-if='album.images.length > 0')
+								img.album-thumb.img-thumbnail(:src='album.images[0].url', alt='')
+								h4 {{album.name}}
+								a.btn.btn-default.btn-block(:href="'/album/' + album.id") Album Details
+			div(v-if="errorMsg")
+				header.artist-header.clearfix
+					h1  Request Error: {{errorMsg}}
+					h2 {{albumMsg}}
+
+	script(src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.8/vue.min.js")
+	script.
+		var vueApp = new Vue({
+			el:'#vueApp',
+			data: {
+				albums: !{JSON.stringify(data2)},
+				term: '',
+				errorMsg: '',
+				albumMsg: ''
+			},
+			computed: {
+				filteredTerm: function() {
+					var term = this.term;
+					if (this.albums !== '' && this.term !== '') {
+						return this.albums.filter(function (item) {
+							return item.name.indexOf(term) > -1;
+						});
+					} else {
+						return this.albums
+					}
+				}
+			},
+			methods: {
+
+			}
+
+		});
+
+
